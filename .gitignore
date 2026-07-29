@@ -26,3 +26,5 @@ Thumbs.db
 
 # Drizzle migration meta cache (keep migrations, ignore local scratch if any)
 .drizzle/
+
+.claude/
