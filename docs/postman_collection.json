@@ -1,0 +1,298 @@
+{
+  "info": {
+    "name": "Nexus ERP — Mini ERP + CRM Portal",
+    "description": "All API endpoints for the Mini ERP + CRM Operations Portal backend. Set `baseUrl` (default http://localhost:4000/api), then run \"Auth > Login\" once — it stores the access/refresh tokens as collection variables and every other request uses {{accessToken}} automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "customerId", "value": "" },
+    { "key": "productId", "value": "" },
+    { "key": "challanId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.accessToken) pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "if (json.refreshToken) pm.collectionVariables.set('refreshToken', json.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@erp.test\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Refresh token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.accessToken) pm.collectionVariables.set('accessToken', json.accessToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create customer",
+          "event": [
+            { "listen": "test", "script": { "exec": [
+              "if (pm.response.code === 201) pm.collectionVariables.set('customerId', pm.response.json().id);"
+            ] } }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ramesh Traders\",\n  \"mobile\": \"9876500001\",\n  \"email\": \"ramesh@example.com\",\n  \"businessName\": \"Ramesh Traders Pvt Ltd\",\n  \"gstNumber\": \"29ABCDE1234F1Z5\",\n  \"customerType\": \"wholesale\",\n  \"address\": \"MG Road, Bengaluru\",\n  \"status\": \"lead\",\n  \"followUpDate\": \"2026-08-05\",\n  \"notes\": \"Interested in bulk order\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/customers", "host": ["{{baseUrl}}"], "path": ["customers"] }
+          }
+        },
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=1&limit=20&search=&status=&customerType=",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "description": "matches name, mobile, business name" },
+                { "key": "status", "value": "", "description": "lead | active | inactive" },
+                { "key": "customerType", "value": "", "description": "retail | wholesale | distributor" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get customer detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/customers/{{customerId}}", "host": ["{{baseUrl}}"], "path": ["customers", "{{customerId}}"] }
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
+            "url": { "raw": "{{baseUrl}}/customers/{{customerId}}", "host": ["{{baseUrl}}"], "path": ["customers", "{{customerId}}"] }
+          }
+        },
+        {
+          "name": "Add follow-up",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"note\": \"Called, will confirm order by Friday\",\n  \"followUpDate\": \"2026-08-10\"\n}" },
+            "url": { "raw": "{{baseUrl}}/customers/{{customerId}}/followups", "host": ["{{baseUrl}}"], "path": ["customers", "{{customerId}}", "followups"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products & Inventory",
+      "item": [
+        {
+          "name": "List categories",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/categories", "host": ["{{baseUrl}}"], "path": ["products", "categories"] } }
+        },
+        {
+          "name": "Create category",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Electronics\"\n}" },
+            "url": { "raw": "{{baseUrl}}/products/categories", "host": ["{{baseUrl}}"], "path": ["products", "categories"] }
+          }
+        },
+        {
+          "name": "List warehouses",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/warehouses", "host": ["{{baseUrl}}"], "path": ["products", "warehouses"] } }
+        },
+        {
+          "name": "Create warehouse",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Main Warehouse\",\n  \"location\": \"Whitefield, Bengaluru\"\n}" },
+            "url": { "raw": "{{baseUrl}}/products/warehouses", "host": ["{{baseUrl}}"], "path": ["products", "warehouses"] }
+          }
+        },
+        {
+          "name": "Create product",
+          "event": [
+            { "listen": "test", "script": { "exec": [
+              "if (pm.response.code === 201) pm.collectionVariables.set('productId', pm.response.json().id);"
+            ] } }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ceiling Fan 1200mm\",\n  \"sku\": \"FAN-1200-WHT\",\n  \"unitPrice\": 1499.50,\n  \"currentStock\": 100,\n  \"minStockAlert\": 10\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] }
+          }
+        },
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=20&search=&lowStockOnly=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "description": "matches name or SKU" },
+                { "key": "lowStockOnly", "value": "false" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get product detail (+ recent stock movements)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["products", "{{productId}}"] }
+          }
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"unitPrice\": 1549.00,\n  \"minStockAlert\": 15\n}" },
+            "url": { "raw": "{{baseUrl}}/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["products", "{{productId}}"] }
+          }
+        },
+        {
+          "name": "Adjust stock (IN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 20,\n  \"movementType\": \"in\",\n  \"reason\": \"New purchase order received\"\n}" },
+            "url": { "raw": "{{baseUrl}}/products/{{productId}}/stock-adjustment", "host": ["{{baseUrl}}"], "path": ["products", "{{productId}}", "stock-adjustment"] }
+          }
+        },
+        {
+          "name": "Adjust stock (OUT) — insufficient stock error example",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 999999,\n  \"movementType\": \"out\",\n  \"reason\": \"Damage write-off\"\n}" },
+            "url": { "raw": "{{baseUrl}}/products/{{productId}}/stock-adjustment", "host": ["{{baseUrl}}"], "path": ["products", "{{productId}}", "stock-adjustment"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales Challans",
+      "item": [
+        {
+          "name": "Create challan (draft)",
+          "event": [
+            { "listen": "test", "script": { "exec": [
+              "if (pm.response.code === 201) pm.collectionVariables.set('challanId', pm.response.json().id);"
+            ] } }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customerId}}\",\n  \"items\": [\n    { \"productId\": \"{{productId}}\", \"quantity\": 3 }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/challans", "host": ["{{baseUrl}}"], "path": ["challans"] }
+          }
+        },
+        {
+          "name": "List challans",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/challans?page=1&limit=20&status=&customerId=",
+              "host": ["{{baseUrl}}"],
+              "path": ["challans"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "", "description": "draft | confirmed | cancelled" },
+                { "key": "customerId", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get challan detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/challans/{{challanId}}", "host": ["{{baseUrl}}"], "path": ["challans", "{{challanId}}"] }
+          }
+        },
+        {
+          "name": "Confirm challan (deducts stock)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"confirmed\"\n}" },
+            "url": { "raw": "{{baseUrl}}/challans/{{challanId}}/status", "host": ["{{baseUrl}}"], "path": ["challans", "{{challanId}}", "status"] }
+          }
+        },
+        {
+          "name": "Cancel challan (restocks if was confirmed)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"cancelled\"\n}" },
+            "url": { "raw": "{{baseUrl}}/challans/{{challanId}}/status", "host": ["{{baseUrl}}"], "path": ["challans", "{{challanId}}", "status"] }
+          }
+        }
+      ]
+    }
+  ]
+}

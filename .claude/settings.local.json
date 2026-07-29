@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/KIIT/AppData/Local/Temp/claude/c--Users-KIIT-Desktop-CRM-assignment/16e3ae8b-5706-4d77-99df-708c4cae5403/scratchpad/pw-test/**)",
+      "Bash(mkdir -p shots2)",
+      "Bash(node drive.js)",
+      "Bash(rm -rf shots2)",
+      "Bash(mkdir -p shots3)",
+      "Bash(node drive2.js)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('total:',j.meta.total\\);j.data.forEach\\(p=>console.log\\(p.name, p.sku, p.createdAt\\)\\)}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('total:',j.meta.total\\)}\\)\")",
+      "Bash(rm -rf shots3)",
+      "Bash(mkdir -p shots4)",
+      "Bash(node drive3.js)",
+      "Bash(npx tsx *)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\('challans total:',JSON.parse\\(d\\).meta.total\\)\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('c:/Users/KIIT/Desktop/CRM_assignment/docs/postman_collection.json','utf8'\\)\\); console.log\\('valid JSON'\\)\")",
+      "Bash(npm --version)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(timeout 30 bash -c 'until curl -sf -o /dev/null http://localhost:4000/api/auth/login -X POST -H \"Content-Type: application/json\" -d \"{}\"; do sleep 1; done')",
+      "Bash(curl -s -X POST http://localhost:4000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@erp.test\",\"password\":\"Password123!\"}')",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4000/api/customers)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5173)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5174)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(JSON.stringify\\(JSON.parse\\(d\\).data,null,2\\)\\)\\)\")",
+      "Bash(curl -s -o /dev/null -w \"backend: %{http_code}\\\\n\" http://localhost:4000/api/customers)",
+      "Bash(curl -s -o /dev/null -w \"frontend: %{http_code}\\\\n\" http://localhost:5174)",
+      "Bash(mkdir -p shots5)",
+      "Bash(node verify.js)",
+      "Bash(node verify2.js)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\('remaining Verify* products:',JSON.parse\\(d\\).meta.total\\)\\)\")"
+    ]
+  }
+}
