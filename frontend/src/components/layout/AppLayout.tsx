@@ -22,7 +22,7 @@ export function AppLayout() {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 to-brand-600">
               <Boxes size={14} className="text-white" strokeWidth={2.25} />
             </div>
-            <span className="text-sm font-bold text-slate-900">Nexus ERP</span>
+           <span className="text-sm font-bold text-slate-900">CRM</span>
           </div>
         </header>
 

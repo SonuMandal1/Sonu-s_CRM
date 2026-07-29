@@ -56,7 +56,7 @@ export function Sidebar({ open, onClose }: Props) {
               <Boxes size={18} className="text-white" strokeWidth={2.25} />
             </div>
             <div>
-              <div className="text-sm font-bold leading-tight text-white">Nexus ERP</div>
+              <div className="text-sm font-bold leading-tight text-white">CRM</div>
               <div className="text-[11px] leading-tight text-slate-500">CRM Operations</div>
             </div>
           </div>
